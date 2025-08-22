@@ -18,7 +18,8 @@ export async function POST(req: Request) {
     if (e2) return NextResponse.json({ error: e2.message }, { status: 400 });
 
     return NextResponse.json({ ok: true, votesCount: data?.votes_count ?? null });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? 'bad request' }, { status: 400 });
-  }
+    } catch (e: unknown) {
+       const msg = e instanceof Error ? e.message : 'bad request';
+    return NextResponse.json({ error: msg }, { status: 400 });
+    }
 }
