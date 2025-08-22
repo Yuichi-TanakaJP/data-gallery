@@ -1,10 +1,14 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import WorkCard from '@/components/WorkCard';
 import { supabaseBrowser } from '@/lib/supabaseClient';
 
 type Work = {
-  id: string; title: string; description: string | null;
-  votes_count: number; tags: string[] | null;
+  id: string;
+  title: string;
+  description: string | null;
+  votes_count: number;
+  tags: string[] | null;
 };
 
 async function fetchWorks(): Promise<Work[]> {
@@ -28,7 +32,7 @@ export default async function Page() {
 
       <Grid container spacing={2}>
         {works.map((w) => (
-          <Grid key={w.id} item xs={12} sm={6} md={4}>
+          <Grid key={w.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <WorkCard {...w} />
           </Grid>
         ))}
