@@ -3,6 +3,8 @@ import { Grid } from '@mui/material';
 import WorkCard from '@/components/WorkCard';
 import { supabaseBrowser } from '@/lib/supabaseClient';
 
+export const dynamic = "force-dynamic";
+
 type Work = {
   id: string;
   title: string;
@@ -12,13 +14,18 @@ type Work = {
 };
 
 async function fetchWorks(): Promise<Work[]> {
-  const supa = supabaseBrowser();
-  const { data, error } = await supa
-    .from('works')
-    .select('id,title,description,votes_count,tags')
-    .order('votes_count', { ascending: false });
-  if (error) throw new Error(error.message);
-  return data ?? [];
+  try {
+    const supa = supabaseBrowser();
+    const { data, error } = await supa
+      .from('works')
+      .select('id,title,description,votes_count,tags')
+      .order('votes_count', { ascending: false });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  } catch (error) {
+    console.error('Failed to load works from Supabase', error);
+    return [];
+  }
 }
 
 export default async function Page() {
@@ -30,13 +37,19 @@ export default async function Page() {
         成果物ギャラリー
       </Typography>
 
-      <Grid container spacing={2}>
-        {works.map((w) => (
-          <Grid key={w.id} size={{ xs: 12, sm: 6, md: 4 }}>
-            <WorkCard {...w} />
-          </Grid>
-        ))}
-      </Grid>
+      {works.length === 0 ? (
+        <Typography color="text.secondary">
+          Supabase の環境変数が未設定か、作品データがまだ登録されていません。
+        </Typography>
+      ) : (
+        <Grid container spacing={2}>
+          {works.map((w) => (
+            <Grid key={w.id} size={{ xs: 12, sm: 6, md: 4 }}>
+              <WorkCard {...w} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Container>
   );
 }
