@@ -9,7 +9,7 @@
 - `src/app/page.tsx`: サーバーコンポーネントで作品を取得し、グリッドに `WorkCard` を並べます。
 - `src/components/WorkCard.tsx`: クライアントコンポーネント。票数表示と投票ボタンを持ち、`/api/vote` に POST して楽観的に票数を更新します。
 - `src/app/api/vote/route.ts`: Next.js Route Handler。`vote_events` に挿入し、Supabase のトリガーで `works.votes_count` を増やした後、最新票数を返します。
-- `src/lib/supabaseClient.ts`: Supabase クライアント生成をブラウザ用とサーバー用で分離しています。
+- `src/lib/supabaseClient.ts`: Supabase クライアント生成をブラウザ用とサーバー用で分離しています（service_role 用と、公開キーでの参照専用クライアントを用意）。
 - `src/schemas/index.ts`: Supabase のレスポンスや API 入力のスキーマを Zod で定義しています。
 
 ## 環境変数

@@ -1,7 +1,7 @@
 import { Container, Typography } from '@mui/material';
 import { Grid } from '@mui/material';
 import WorkCard from '@/components/WorkCard';
-import { supabaseServer } from '@/lib/supabaseClient';
+import { supabaseServerPublic } from '@/lib/supabaseClient';
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ type Work = {
 };
 
 async function fetchWorks(): Promise<Work[]> {
-  const supa = supabaseServer();
+  const supa = supabaseServerPublic();
   const { data, error } = await supa
     .from('works')
     .select('id,title,description,votes_count,tags')

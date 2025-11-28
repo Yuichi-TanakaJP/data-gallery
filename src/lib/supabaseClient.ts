@@ -24,3 +24,13 @@ export const supabaseServer = () => {
     auth: { persistSession: false },
   });
 };
+
+// サーバ用：公開キーで読み取り専用（service_role がない環境でも参照できる）
+export const supabaseServerPublic = () => {
+  const supabaseUrl = ensureEnv('NEXT_PUBLIC_SUPABASE_URL');
+  const supabaseAnonKey = ensureEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: { persistSession: false },
+  });
+};
