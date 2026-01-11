@@ -1,7 +1,7 @@
-import { Container, Typography } from '@mui/material';
-import { Grid } from '@mui/material';
-import WorkCard from '@/components/WorkCard';
-import { supabaseBrowser } from '@/lib/supabaseClient';
+import { Container, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+import WorkCard from "@/components/WorkCard";
+import { supabaseBrowser } from "@/lib/supabaseClient";
 
 type Work = {
   id: string;
@@ -12,11 +12,15 @@ type Work = {
 };
 
 async function fetchWorks(): Promise<Work[]> {
+  console.log("[env check]", {
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    anon: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "exists" : "missing",
+  });
   const supa = supabaseBrowser();
   const { data, error } = await supa
-    .from('works')
-    .select('id,title,description,votes_count,tags')
-    .order('votes_count', { ascending: false });
+    .from("works")
+    .select("id,title,description,votes_count,tags")
+    .order("votes_count", { ascending: false });
   if (error) throw new Error(error.message);
   return data ?? [];
 }
