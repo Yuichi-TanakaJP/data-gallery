@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabaseClient";
+import { supabaseServerAdmin } from "@/lib/supabaseServer";
 
 export async function POST(req: Request) {
   try {
@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     if (!workId)
       return NextResponse.json({ error: "workId required" }, { status: 400 });
 
-    const supa = supabaseServer();
+    const supa = supabaseServerAdmin();
 
     // 票イベントを1件追加（トリガでworks.votes_countが+1される）
     const { error } = await supa
