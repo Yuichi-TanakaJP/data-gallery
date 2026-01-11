@@ -16,10 +16,6 @@ type Work = {
 };
 
 async function fetchWorks(): Promise<Work[]> {
-  console.log("[env check]", {
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    anon: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "exists" : "missing",
-  });
   const supa = supabaseBrowser();
   const { data, error } = await supa
     .from("works")
@@ -36,8 +32,8 @@ export default async function Page() {
   try {
     works = await fetchWorks();
   } catch (error) {
-    console.error('Failed to load works from Supabase', error);
-    errorMessage = '作品データの取得に失敗しました。設定を確認してください。';
+    console.error("Failed to load works from Supabase", error);
+    errorMessage = "作品データの取得に失敗しました。設定を確認してください。";
   }
 
   return (
