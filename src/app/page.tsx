@@ -3,6 +3,10 @@ import { Grid } from "@mui/material";
 import WorkCard from "@/components/WorkCard";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type Work = {
   id: string;
   title: string;
