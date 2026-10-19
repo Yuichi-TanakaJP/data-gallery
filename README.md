@@ -1,6 +1,6 @@
 # Data Gallery
 
-作品一覧を票数順に表示し、投票できるシンプルなギャラリーアプリです。Next.js 15 (App Router) + MUI v7 + Supabase で構築しています。
+作品一覧を票数順に表示し、投票できるシンプルなギャラリーアプリです。Next.js 15 (App Router) + MUI v7 で構築し、SupabaseとローカルSQLiteを切り替えて学べます。
 
 ## アプリ概要
 
@@ -16,6 +16,25 @@
 - [Supabase](https://supabase.com/) (`@supabase/supabase-js`)
 - [Zod](https://zod.dev/) による入力/レスポンスのスキーマ定義
 - TypeScript, ESLint, Tailwind CSS (PostCSS)
+
+## ローカルSQLiteでの学習用起動
+
+Node.js 22.13以降を使用します（Node内蔵SQLiteは実験的API）。追加のDBサービスやDockerは不要です。
+`.env.local` に `GALLERY_DATABASE=sqlite` と `GALLERY_SQLITE_PATH`（作業用DBの絶対パス）を設定します。
+Supabase接続は `GALLERY_DATABASE=supabase` で従来どおり利用できます。
+
+復旧済みSQLiteから別ファイルを作る例（既存の出力は上書きしません）：
+
+```powershell
+python scripts/init-local-db.py --source C:/backup/data-gallery-recovered.sqlite3 --target C:/local-data/gallery.sqlite
+npm run dev -- --hostname 127.0.0.1 --port 3002
+```
+
+作品一覧と投票は選択したDBだけを使用します。SQLiteでは投票履歴の追加と票数更新を同一トランザクションで処理します。
+原本を直接指定せず、初期化した作業コピーを使ってください。DB未作成時はエラーになり、空DBを自動生成しません。
+公開運用・新しいデータの完全復旧とは別の、PC内での学習用構成です。ポートを外部公開しないでください。
+
+検証：`node --test tests/sqlite-store.test.mjs`、`npx tsc --noEmit`、`npm run lint`、`npm run build`。
 
 ## セットアップ
 
