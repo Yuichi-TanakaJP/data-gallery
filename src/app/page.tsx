@@ -11,8 +11,10 @@ export const revalidate = 0;
 export default async function Page() {
   let works: Work[] = [];
   let errorMessage: string | null = null;
+  let localBackend = false;
 
   try {
+    localBackend = galleryBackend() === "sqlite";
     works = await getGalleryWorks();
   } catch (error) {
     console.error("Failed to load gallery works", error);
@@ -25,7 +27,7 @@ export default async function Page() {
         成果物ギャラリー
       </Typography>
 
-      {galleryBackend() === "sqlite" && (
+      {localBackend && (
         <Typography color="text.secondary" sx={{ mb: 2 }}>ローカルSQLite・学習用（2025年の復旧データの作業コピー）</Typography>
       )}
       {errorMessage ? (

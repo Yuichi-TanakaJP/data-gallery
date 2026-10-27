@@ -19,7 +19,7 @@
 
 ## ローカルSQLiteでの学習用起動
 
-Node.js 22.13以降を使用します（Node内蔵SQLiteは実験的API）。追加のDBサービスやDockerは不要です。
+Node.js 22.x（22.13以降、23未満）を使用します（Node内蔵SQLiteは実験的API）。追加のDBサービスやDockerは不要です。
 `.env.local` に `GALLERY_DATABASE=sqlite` と `GALLERY_SQLITE_PATH`（作業用DBの絶対パス）を設定します。
 Supabase接続は `GALLERY_DATABASE=supabase` で従来どおり利用できます。
 
@@ -66,3 +66,12 @@ npm run lint   # ESLint
 - [docs/ONBOARDING.md](./docs/ONBOARDING.md): アプリの全体像、主要コンポーネント、開発の進め方
 - [docs/decisions/](./docs/decisions/): 技術的な意思決定の記録
 - [docs/dev-logs/](./docs/dev-logs/): 開発中に発生した問題の調査ログ
+
+
+### SQLiteコピー作成の失敗と再試行
+
+作成処理は保存先と同じフォルダーの固有一時ファイルでデータ投入・件数・整合性・原本hashを検証し、成功時だけハードリンクで正式名を確定します。既存の正式ファイルは上書きしません。同時に別処理が作成しても既存ファイルを維持して失敗します。対応するハードリンク機能のあるローカルファイルシステムで使用してください。未対応の場合は安全側で失敗し、コピー上書きには切り替えません。
+
+通常の失敗ではこの処理が作った一時ファイルのみ削除し、正式ファイルを残さないため、同じ保存先へ再試行できます。強制終了・電源断では `.gallery-init-*.sqlite` が残る場合がありますが、正式DBとして使いません。失敗原因を直した別の入力を使う場合も、救出元は編集せず保全してください。
+
+確認：`npm test`、`npm run test:init`、`npx tsc --noEmit`、`npm run lint`、`npm run build`。実DBへの投票・Supabase変更は行いません。
