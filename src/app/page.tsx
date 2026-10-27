@@ -1,38 +1,23 @@
 import { Container, Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import WorkCard from "@/components/WorkCard";
-import { supabaseBrowser } from "@/lib/supabaseClient";
+import { getGalleryWorks, galleryBackend } from "@/lib/gallery-store";
+import type { Work } from "@/schemas";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-type Work = {
-  id: string;
-  title: string;
-  description: string | null;
-  votes_count: number;
-  tags: string[] | null;
-};
-
-async function fetchWorks(): Promise<Work[]> {
-  const supa = supabaseBrowser();
-  const { data, error } = await supa
-    .from("works")
-    .select("id,title,description,votes_count,tags")
-    .order("votes_count", { ascending: false });
-  if (error) throw new Error(error.message);
-  return data ?? [];
-}
-
 export default async function Page() {
   let works: Work[] = [];
   let errorMessage: string | null = null;
+  let localBackend = false;
 
   try {
-    works = await fetchWorks();
+    localBackend = galleryBackend() === "sqlite";
+    works = await getGalleryWorks();
   } catch (error) {
-    console.error("Failed to load works from Supabase", error);
+    console.error("Failed to load gallery works", error);
     errorMessage = "作品データの取得に失敗しました。設定を確認してください。";
   }
 
@@ -42,6 +27,9 @@ export default async function Page() {
         成果物ギャラリー
       </Typography>
 
+      {localBackend && (
+        <Typography color="text.secondary" sx={{ mb: 2 }}>ローカルSQLite・学習用（2025年の復旧データの作業コピー）</Typography>
+      )}
       {errorMessage ? (
         <Typography color="error">{errorMessage}</Typography>
       ) : works.length === 0 ? (

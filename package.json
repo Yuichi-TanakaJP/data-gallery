@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test tests/sqlite-store.test.mjs",
+    "test:init": "python -m unittest discover -s tests -p test_init_local_db.py"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -35,5 +37,8 @@
   "overrides": {
     "sharp": "0.35.5",
     "postcss": "8.5.23"
+  },
+  "engines": {
+    "node": ">=22.13.0 <23"
   }
 }

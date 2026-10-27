@@ -7,7 +7,7 @@
 - Keep privileged credentials in server-only code. Never expose SUPABASE_SERVICE_ROLE_KEY to public clients, browser bundles, logs, docs or commits. Do not read or print `.env` values.
 - Do not apply `supabase/schema.sql`, seed data, vote against live data, or change DB policies merely to verify a docs/code edit. These operations can modify real data and require explicit scope and authorization.
 - Verify the selected backend and actual branch before work. A separate SQLite feature checkout may contain uncommitted work; do not overwrite it or claim its features are merged.
-- Use npm/package-lock.json. For relevant code changes use the existing `npm run lint` and `npm run build` scripts with non-production inputs. No test script is currently defined; report unavailable runtime/data coverage rather than inventing a passing gate.
+- Use npm/package-lock.json. For relevant code changes use the existing `npm run lint` and `npm run build` scripts with non-production inputs. Use `npm test` for SQLite list/vote tests and `npm run test:init` for isolated Python initializer tests. Report untested live Supabase coverage separately.
 - Work on a dedicated branch and PR against `main`. Production publication and database operations require their own approval.
 
 ## Review and local verification
