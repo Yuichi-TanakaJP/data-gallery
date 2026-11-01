@@ -17,3 +17,10 @@
 - Auth/permissions/secrets/billing/migrations, external send/publish controls, live-data/processed-state writes, scheduler execution controls (including retry/exit gating), production or broad high impact: independent specialist/domain and rollback scrutiny, related full suite/build and relevant UAT. Investigate unknown impact before granting a low-risk exemption.
 - Choose model/effort for risk; briefly report scope/results/untested coverage. Failed reviews do not count or waive required scope. Re-review material changes only. Required-check failures and correctness/safety/requirement findings block; optional polish does not.
 - Local checks first; optional Actions default off subject to enforced rules/domain exceptions. Preserve triggers; [skip ci] only when allowed, no default dispatch/reruns. No execution = NOT_RUN, never PASS. Existing merge/deletion/deploy/publication/paid-operation approvals remain.
+
+## Lint dependency compatibility
+
+- Normal npm ci runs the reviewed minimatch import preparation via postinstall. If scripts are disabled, explicitly run npm run prepare:dependencies before lint/build and npm run test:dependencies.
+- The local legacy bridge supports only the reviewed consumers; RegExp compilation intentionally fails closed. Do not enable import/no-internal-modules with pattern options until its parent uses a supported matcher API.
+- Parent updates require reviewing API use, the pinned source hashes and the Windows/Linux compatibility suite. Restore dependency changes as a set and use clean npm ci for rollback.
+- Node ^22.23.4 is the tested runtime range. Keep production Supabase reads/writes and voting out of dependency validation.
