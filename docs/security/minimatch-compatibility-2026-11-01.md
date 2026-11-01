@@ -23,3 +23,7 @@ Windows Node22.23.4/npm10.9.9の標準npm ci（postinstall含む）、互換7件
 rollbackはmanifest/lock、postinstall、bridgeとhashレシピの変更一式を戻してclean ci/build、公開物は直前正常deploymentへ。node_modulesにはpatch済みソースが残るためmanifestだけを戻して使い回さない。旧依存へ戻すと監査指摘が再発する。DB移行不要。ブラウザーの本番投票UAT/実rollbackは未実施。
 
 根拠: https://github.com/advisories/GHSA-g3hv-75wg-m249 、公開npm各親の配布コードとmanifest（2026-11-01確認）。
+
+## 独立レビュー後の境界強化
+
+旧globの`..`を最適化しないdefaultを明示し、CJS/ESM実親APIで検証。準備前に全親から同一bridgeと公式11.0.3 backendのロードを照合する。共有hardlinkは全書込み前に拒否する。欠落bridge/backend、共有ファイル、dev省略、未知sourceの回帰テストを含め11件。失敗時は依存ファイルを手修正せず通常npm ciで再構築する。
