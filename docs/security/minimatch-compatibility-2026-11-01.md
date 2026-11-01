@@ -27,3 +27,6 @@ rollbackはmanifest/lock、postinstall、bridgeとhashレシピの変更一式�
 ## 独立レビュー後の境界強化
 
 旧globの`..`を最適化しないdefaultを明示し、CJS/ESM実親APIで検証。準備前に全親から同一bridgeと公式11.0.3 backendのロードを照合する。共有hardlinkは全書込み前に拒否する。欠落bridge/backend、共有ファイル、dev省略、未知sourceの回帰テストを含め11件。失敗時は依存ファイルを手修正せず通常npm ciで再構築する。
+
+
+追加レビューの境界修正: bridgeの3ファイルを独立したtooling/minimatch-bridge-hashes.jsonへ固定する（GitのCRLF/LF差だけ正規化）。npmのfile linkでsourceとinstallが同一でも改変を検出する。node_modules rootのsymlink/junctionとrealpath相違を全書込み前に拒否し、共有hardlink拒否と合わせて他checkoutへの副作用を防ぐ。POSIX文字クラスはv3と11で判定が違うため、限定bridgeではMINIMATCH_LEGACY_POSIX_UNSUPPORTEDで明示停止する。bridge更新はhashだけを追従せず親APIの意味を再レビューする。回帰テストは14件（実CJS/ESM親、改変bridge、共有rootを含む）。
